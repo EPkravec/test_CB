@@ -21,29 +21,34 @@ def create_table_one(data, conn, cur):
     cur.executemany("INSERT INTO general_table VALUES(?, ?, ?, ?, ?, ?);", data)
     conn.commit()
 
+
 def scrap_data(conn, cur):
     cur.execute("SELECT * FROM general_table;")
     a = cur.fetchall()
     conn.commit()
     return a
+
+
 data = megadda
 create_table_one(data, conn, cur)
-a=scrap_data(conn, cur)
-print(a)
-# cur.execute(
-#     """
-#     CREATE TABLE IF NOT EXISTS tale_two(
-#     ID_RATING,
-#     ID_ISSUE,
-#     NAME_ISSUE,
-#     ISIN_ISSUE,
-#     NAME_RATING_AGENCY,
-#     NAME_RATING_SCALE
-#     );
-#     """)
-# conn.commit()
-#
-# cur.executemany("INSERT INTO tale_two VALUES(?, ?, ?, ?, ?, ?);", a)
-# a = cur.fetchall()
-# print(a)
-# conn.commit()
+a = scrap_data(conn, cur)
+
+def create_table_two(data):
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS tale_two(
+        ID_RATING,
+        ID_ISSUE,
+        NAME_ISSUE,
+        ISIN_ISSUE,
+        NAME_RATING_AGENCY,
+        NAME_RATING_SCALE
+        );
+        """)
+    conn.commit()
+
+    cur.executemany("INSERT INTO tale_two VALUES(?, ?, ?, ?, ?, ?);", data)
+    a = cur.fetchall()
+    print(a)
+    conn.commit()
+create_table_two(a)
