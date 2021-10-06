@@ -1,10 +1,7 @@
 # -*- coding: utf8 -*-
-import sqlite3
 
-
-conn = sqlite3.connect('data_data.db')
-cur = conn.cursor()
-def updateDB(conn):
+def updateDB(conn, data):
+    cur = conn.cursor()
     try:
         with conn:
             sql = """ALTER DATABASE data_data CHARACTER SET utf8 COLLATE utf8_general_ci;"""
@@ -24,6 +21,8 @@ def updateDB(conn):
                 ) ENGINE=InnoDB
               """
             cur.execute(sql)
+            cur.executemany("INSERT INTO table_one VALUES(?, ?, ?, ?, ?, ?);", data)
+            conn.commit()
     except:
         print('Таблицу table_one не создали')
 
@@ -40,7 +39,7 @@ def updateDB(conn):
                 RATING_SYMBOL TEXT NOT NULL,
                 DS TIMESTAMP NOT NULL DEFAULT NOW(),
                 DE TIMESTAMP NOT NULL DEFAULT NOW()
-                );
+                ) ENGINE=InnoDB
             """
             cur.execute(sql)
     except:
